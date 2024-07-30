@@ -1,0 +1,7 @@
+---
+- name: 'Playbook for Windows 2022 AMI'
+  hosts: all
+  remote_user: Administrator
+  gather_facts: false
+  roles:
+    - disk_facts
