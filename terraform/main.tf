@@ -22,22 +22,22 @@ data "aws_iam_policy" "AmazonSSMManagedInstanceCore" {
 }
 
 resource "aws_iam_role" "default_ssm_role" {
-  name               = "DefaultSSMProfileRole"
-  path               = "/"
+  name = "DefaultSSMProfileRole"
+  path = "/"
   assume_role_policy = jsonencode(
-{
-    Version = "2012-10-17",
-    Statement = [
+    {
+      Version = "2012-10-17",
+      Statement = [
         {
-            Action = "sts:AssumeRole"
-            Principal = {
-               Service = "ec2.${data.aws_partition.this.dns_suffix}"
-            }
-            Effect = "Allow"
-            Sid = ""
+          Action = "sts:AssumeRole"
+          Principal = {
+            Service = "ec2.${data.aws_partition.this.dns_suffix}"
+          }
+          Effect = "Allow"
+          Sid    = ""
         }
-    ]
-})
+      ]
+  })
   inline_policy {}
   managed_policy_arns = [data.aws_iam_policy.AmazonSSMManagedInstanceCore.arn]
 }
@@ -58,7 +58,7 @@ resource "aws_security_group" "packer" {
     protocol    = "-1"
     cidr_blocks = ["0.0.0.0/0"]
   }
-  
+
   tags = {
     Name = "packer-ssm"
   }
