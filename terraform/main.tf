@@ -2,7 +2,7 @@ terraform {
   required_providers {
     aws = {
       source  = "hashicorp/aws"
-      version = "~> 5.0"
+      version = "~> 6.0"
     }
   }
 }
@@ -21,7 +21,7 @@ data "aws_iam_policy" "AmazonSSMManagedInstanceCore" {
   arn = "arn:${data.aws_partition.this.id}:iam::aws:policy/AmazonSSMManagedInstanceCore"
 }
 
-resource "aws_iam_role" "default_ssm_role" {
+resource "aws_iam_role" "this" {
   name = "DefaultSSMProfileRole"
   path = "/"
   assume_role_policy = jsonencode(
@@ -38,16 +38,37 @@ resource "aws_iam_role" "default_ssm_role" {
         }
       ]
   })
-  inline_policy {}
-  managed_policy_arns = [data.aws_iam_policy.AmazonSSMManagedInstanceCore.arn]
 }
 
-resource "aws_iam_instance_profile" "default_ssm_instance_profile" {
+resource "aws_iam_role_policy_attachment" "this" {
+  role       = aws_iam_role.this.name
+  policy_arn = data.aws_iam_policy.AmazonSSMManagedInstanceCore.arn
+}
+
+resource "aws_iam_role" "test_role" {
+  name = "test_role"
+
+  assume_role_policy = jsonencode({
+    Version = "2012-10-17"
+    Statement = [
+      {
+        Action = "sts:AssumeRole"
+        Effect = "Allow"
+        Sid    = ""
+        Principal = {
+          Service = "ec2.${data.aws_partition.this.dns_suffix}"
+        }
+      },
+    ]
+  })
+}
+
+resource "aws_iam_instance_profile" "this" {
   name = "DefaultSSMProfile"
-  role = aws_iam_role.default_ssm_role.name
+  role = aws_iam_role.this.name
 }
 
-resource "aws_security_group" "packer" {
+resource "aws_security_group" "this" {
   name        = "packer-ssm-egress-all"
   description = "Security group with egress all for Packer"
   vpc_id      = var.vpc_id

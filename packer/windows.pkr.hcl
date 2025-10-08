@@ -2,14 +2,14 @@ packer {
   required_plugins {
     amazon = {
       source  = "github.com/hashicorp/amazon"
-      version = "~> 1.3"
+      version = "~> 1.5.0"
     }
     windows-update = {
-      version = "~> 0.16"
+      version = "~> 0.17.1"
       source  = "github.com/rgl/windows-update"
     }
     ansible = {
-      version = "~> 1.1.1"
+      version = "~> 1.1.4"
       source  = "github.com/hashicorp/ansible"
     }
   }

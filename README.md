@@ -72,12 +72,12 @@ Before you begin, ensure you have the following installed on your local machine:
 
    ```sh
    cd packer
-   packer build windows-ami.json
+   packer build windows.pkr.hcl
    ```
 
 ## Packer Configuration
 
-The Packer template `windows-ami.json` includes configurations to bootstrap an EC2 instance with SSH and run Ansible over an SSH tunnel through SSM.
+The Packer template `windows.pkr.hcl` includes configurations to bootstrap an EC2 instance with SSH and run Ansible over an SSH tunnel through SSM.
 
 ## Ansible Playbooks
 
